@@ -1,4 +1,6 @@
-# rt-joint-control
+# servo-frame-probe
+
+> **Why separate wire framing from host jitter**: On STM32/CAN-or-UART servo links (from Formula SAE drivetrains to tabletop actuators), dropped frames look identical to USB-serial polling jitter unless sequence-covered CRCs and host receive timestamps are logged cleanly. This repo gives both the 8+N binary frame parser (`CRC-16/CCITT-FALSE` over `seq..payload`) and a reproducible P50/P95/P99 jitter report generator.
 
 **1 kHz 关节伺服回路的实时性与时延分解。**
 *1 kHz joint servo loop — jitter and end-to-end latency decomposition.*
@@ -23,7 +25,7 @@
 ## 目录 / Layout
 
 ```
-rt-joint-control/
+servo-frame-probe/
 ├── docs/protocol.md          # 帧格式（含 CRC16）与命令表
 ├── tools/frame.py            # 帧编解码（可离线单测，无需硬件）
 ├── tools/jitter_report.py    # CSV → P50/P90/P99 抖动表（Markdown）
@@ -66,6 +68,11 @@ python -m pytest tests -q                  # 帧编解码单测
 > 数据口径：所有数字由 `tools/jitter_report.py` 从原始 CSV 复算，README 不手填。
 > **仓库内的 `sample_jitter.csv` 是 `tools/make_sample_csv.py` 生成的合成数据**，只用于验证工具链；
 > 真实三配置对比要等固件上板后用逻辑分析仪采。上面那张表的实测列在拿到真实数据前保持"待填"。
+
+## 相关
+
+- [nav2-mission-fsm](https://github.com/cccjj55/nav2-mission-fsm) — ROS 2 Humble 仓储自主导航与解耦任务状态机
+- [sim-claims-ledger](https://github.com/cccjj55/sim-claims-ledger) — 具身仿真吞吐与控制声明核验账本
 
 ## License
 
